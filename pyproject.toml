@@ -1,0 +1,24 @@
+[project]
+name = "pair-trading"
+version = "0.1.0"
+description = "Pair trading strategy implementation"
+authors = [
+    { name="Your Name", email="your.email@example.com" }
+]
+requires-python = ">=3.12"
+
+dependencies = [
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "scikit-learn>=1.3.0",
+    "yfinance>=0.2.28",
+    "ta-lib>=0.4.28",
+    "matplotlib>=3.7.0"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+pair-trading = "pair_trading.main:main"
