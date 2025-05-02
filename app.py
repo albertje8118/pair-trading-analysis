@@ -51,6 +51,42 @@ else:
 start_date = st.sidebar.date_input("Start Date", value=pd.to_datetime("2023-05-02"))
 end_date = st.sidebar.date_input("End Date", value=pd.to_datetime("2025-05-02"))
 
+# Data interval selection
+interval = st.sidebar.selectbox(
+    "Data Interval",
+    options=['1m', '5m', '15m', '30m', '1h', '4h', '6h', '12h', '1d'],
+    index=8,  # Default to 1d
+    help="""
+    Select the time interval for data collection:
+    - 1m: 1 minute
+    - 5m: 5 minutes
+    - 15m: 15 minutes
+    - 30m: 30 minutes
+    - 1h: 1 hour
+    - 4h: 4 hours
+    - 6h: 6 hours
+    - 12h: 12 hours
+    - 1d: 1 day (default)
+    
+    Note: Higher frequency data (1m-12h) requires more recent dates and may have limitations.
+    """
+)
+
+# Window size for calculations
+window = st.sidebar.number_input(
+    "Window Size",
+    min_value=1,
+    max_value=100,
+    value=20,
+    help="""
+    The window size determines the number of periods used for calculating moving averages and z-scores.
+    A larger window size will make the analysis smoother but less responsive to recent changes.
+    A smaller window size will make the analysis more responsive but potentially noisier.
+    
+    Default: 20 (commonly used for 20-day moving averages)
+    """
+)
+
 # Run analysis button
 if st.sidebar.button("Run Analysis"):
     try:
@@ -61,13 +97,22 @@ if st.sidebar.button("Run Analysis"):
             symbol2 = symbol2.split(" - ")[0]
             
         # Create PairTrading instance
-        pair = PairTrading(symbol1, symbol2, str(start_date), str(end_date))
+        analysis = PairTrading(
+            symbol1,
+            symbol2,
+            start_date.strftime("%Y-%m-%d"),
+            end_date.strftime("%Y-%m-%d"),
+            interval=interval,
+            window=window
+        )
         
         # Run analysis
-        pair.analyze_relationship()
+        analysis.analyze_relationship()
         
         # Get results
-        t_stat, p_value, _ = pair.test_cointegration()
+        t_stat, p_value, _ = analysis.test_cointegration()
+        pearson_corr, pearson_p, spearman_corr, spearman_p = analysis.calculate_correlations()
+        f_stat, granger_p, _, _ = analysis.test_granger_causality()
         pearson_corr, pearson_p, spearman_corr, spearman_p = pair.calculate_correlations()
         f_stat, granger_p, _, _ = pair.test_granger_causality()
         

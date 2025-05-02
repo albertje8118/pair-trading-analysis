@@ -8,24 +8,38 @@ import matplotlib.pyplot as plt
 from typing import Tuple, List
 
 class PairTrading:
-    def __init__(self, symbol1: str, symbol2: str, start_date: str, end_date: str):
+    def __init__(self, symbol1: str, symbol2: str, start_date: str, end_date: str, interval: str = '1d', window: int = 20):
         """
-        Initialize PairTrading with two stock symbols and date range
+        Initialize PairTrading with two stock symbols, date range, interval, and window size
+        
+        Parameters:
+            symbol1 (str): First asset symbol
+            symbol2 (str): Second asset symbol
+            start_date (str): Start date for analysis (YYYY-MM-DD)
+            end_date (str): End date for analysis (YYYY-MM-DD)
+            interval (str): Data interval (1m, 5m, 15m, 30m, 1h, 4h, 6h, 12h, 1d)
+            window (int): Window size for moving averages and z-scores
         """
         self.symbol1 = symbol1
         self.symbol2 = symbol2
         self.start_date = start_date
         self.end_date = end_date
+        self.interval = interval
+        self.window = window
         self.data = None
         self.spread = None
         self.z_scores = None
         
     def fetch_data(self) -> pd.DataFrame:
         """
-        Fetch historical data for both symbols
+        Fetch historical data for both symbols with specified interval
         """
-        data1 = yf.download(self.symbol1, start=self.start_date, end=self.end_date)
-        data2 = yf.download(self.symbol2, start=self.start_date, end=self.end_date)
+        valid_intervals = ['1m', '5m', '15m', '30m', '1h', '4h', '6h', '12h', '1d']
+        if self.interval not in valid_intervals:
+            raise ValueError(f"Invalid interval. Must be one of: {', '.join(valid_intervals)}")
+        
+        data1 = yf.download(self.symbol1, start=self.start_date, end=self.end_date, interval=self.interval)
+        data2 = yf.download(self.symbol2, start=self.start_date, end=self.end_date, interval=self.interval)
         
         # Ensure both datasets have the same dates
         common_dates = data1.index.intersection(data2.index)
@@ -50,14 +64,17 @@ class PairTrading:
     
     def calculate_z_scores(self) -> pd.Series:
         """
-        Calculate z-scores of the spread
+        Calculate z-scores for the spread using the specified window
         """
         if self.spread is None:
             self.calculate_spread()
         
-        mean = self.spread.mean()
-        std = self.spread.std()
-        self.z_scores = (self.spread - mean) / std
+        # Calculate rolling mean and std using the specified window
+        rolling_mean = self.spread.rolling(window=self.window).mean()
+        rolling_std = self.spread.rolling(window=self.window).std()
+        
+        # Calculate z-scores using rolling statistics
+        self.z_scores = (self.spread - rolling_mean) / rolling_std
         return self.z_scores
     
     def test_cointegration(self) -> Tuple[float, float, float]:

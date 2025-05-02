@@ -50,6 +50,8 @@ streamlit run app.py
    - Search for "BTC" in the first asset field (select "BTC-USD - Bitcoin USD")
    - Search for "S&P" in the second asset field (select "^GSPC - S&P 500")
    - Set a date range (e.g., 2023-01-01 to 2025-01-01)
+   - Select data interval (e.g., "1d" for daily data)
+   - Set window size (e.g., 20 for 20-day moving averages)
    - Click "Run Analysis"
 
 #### Example 2: Analyzing Tech Stocks
@@ -65,11 +67,14 @@ streamlit run app.py
 - Compare the price movements of both assets
 - Look for similar trends or divergences
 - Use the interactive plot to zoom in on specific periods
+- Note how the selected data interval affects the granularity of the data
 
 #### Spread Analysis
 - Observe the Z-score spread
 - Look for mean reversion opportunities
 - Note when the spread crosses the entry/exit levels (±1.5 and ±2.0)
+- The window size affects the smoothness of the z-scores
+- Smaller windows make the z-scores more responsive to recent changes
 
 #### Correlation Analysis
 - Check the rolling Pearson correlation for linear relationships
