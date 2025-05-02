@@ -34,6 +34,8 @@ pip install -r requirements.txt
 
 ## Usage
 
+### 1. Starting the Application
+
 1. Run the application:
 ```bash
 streamlit run app.py
@@ -41,11 +43,49 @@ streamlit run app.py
 
 2. Open your web browser and navigate to `http://localhost:8501`
 
-3. In the sidebar:
-   - Enter or search for the first asset symbol
-   - Enter or search for the second asset symbol
-   - Select the date range for analysis
-   - Click "Run Analysis" to perform the analysis
+### 2. Basic Analysis
+
+#### Example 1: Analyzing Bitcoin vs S&P 500
+1. In the sidebar:
+   - Search for "BTC" in the first asset field (select "BTC-USD - Bitcoin USD")
+   - Search for "S&P" in the second asset field (select "^GSPC - S&P 500")
+   - Set a date range (e.g., 2023-01-01 to 2025-01-01)
+   - Click "Run Analysis"
+
+#### Example 2: Analyzing Tech Stocks
+1. In the sidebar:
+   - Search for "Apple" in the first asset field (select "AAPL - Apple Inc.")
+   - Search for "Microsoft" in the second asset field (select "MSFT - Microsoft Corporation")
+   - Set a date range (e.g., 2023-01-01 to 2025-01-01)
+   - Click "Run Analysis"
+
+### 3. Interpreting Results
+
+#### Price Series Analysis
+- Compare the price movements of both assets
+- Look for similar trends or divergences
+- Use the interactive plot to zoom in on specific periods
+
+#### Spread Analysis
+- Observe the Z-score spread
+- Look for mean reversion opportunities
+- Note when the spread crosses the entry/exit levels (±1.5 and ±2.0)
+
+#### Correlation Analysis
+- Check the rolling Pearson correlation for linear relationships
+- Examine the rolling Spearman correlation for monotonic relationships
+- Look for periods of high correlation strength
+
+#### Granger Causality
+- Review the single Granger causality test results
+- Analyze the rolling Granger causality plots
+- Look for periods where one asset predicts the other
+
+#### Comprehensive Analysis
+- Review the long-term relationship assessment
+- Check the short-term relationship analysis
+- Evaluate the predictive relationship
+- Consider the overall trading suitability rating
 
 ## Analysis Components
 
